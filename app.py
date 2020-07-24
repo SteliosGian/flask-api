@@ -16,16 +16,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
-#app.secret_key = 'stelios'
 app.config['JWT_SECRET_KEY'] = 'stelios'
 api = Api(app)
 
 jwt = JWTManager(app)
 
-
-@app.before_first_request
-def create_tables():
-    db.create_all()
+if app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///data.db':
+    @app.before_first_request
+    def create_tables():
+        db.create_all()
 
 
 @jwt.user_claims_loader
@@ -91,6 +90,5 @@ api.add_resource(UserLogout, '/logout')
 api.add_resource(TokenRefresh, '/refresh')
 
 if __name__ == '__main__':
-    # from db import db
     db.init_app(app)
     app.run(port=5000, debug=True)

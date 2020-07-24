@@ -21,6 +21,7 @@ _user_parser.add_argument('password',
                           required=True,
                           help="This field cannot be blank")
 
+
 class UserRegister(Resource):
     def post(self):
         data = _user_parser.parse_args()
@@ -70,6 +71,7 @@ class UserLogin(Resource):
             }, 200
 
         return {'message': 'Invalid credentials'}, 401
+
 
 class UserLogout(Resource):
     @jwt_required
